@@ -1,5 +1,5 @@
-const page = () => {
+const AnalyticsPage = () => {
   return <div>page</div>;
 };
 
-export default page;
+export default AnalyticsPage;
