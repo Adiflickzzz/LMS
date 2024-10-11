@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-const montserrat = Montserrat({ subsets: ["latin"] });
+const montserrat = Montserrat({ weight: ["700"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
