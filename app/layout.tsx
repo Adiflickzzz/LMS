@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ToastProvider } from "@/components/providers/toaster-provider";
 const montserrat = Montserrat({ weight: ["700"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${montserrat.className} antialiased`}>
+          <ToastProvider />
           {children}
         </body>
       </html>
