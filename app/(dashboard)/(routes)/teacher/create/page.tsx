@@ -1,7 +1,9 @@
+"use client";
 import { z } from "zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -11,6 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -19,6 +25,7 @@ const formSchema = z.object({
 });
 
 const CreatePage = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,8 +35,13 @@ const CreatePage = () => {
 
   const { isSubmitting, isValid } = form.formState;
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await axios.post("api/course", values);
+      router.push(`teacher/courses/${response.data.id}`);
+    } catch {
+      toast.error("Something went wrong!")
+    }
   };
 
   return (
@@ -41,23 +53,40 @@ const CreatePage = () => {
           change this later.
         </p>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 mt-8"
+          >
             <FormField
               name="title"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Course Title</FormLabel>
+                  <FormLabel className="text-md">Course title</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter course title" {...field} />
+                    <Input
+                      disabled={isSubmitting}
+                      placeholder="e.g. 'Advanced web development'"
+                      {...field}
+                    />
                   </FormControl>
+                  <FormDescription>
+                    What will you teach in this course?
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting || !isValid}>
-              Submit
-            </Button>
+            <div className="flex items-center gap-x-2">
+              <Link href="/">
+                <Button type="button" variant="ghost">
+                  Cancel
+                </Button>
+              </Link>
+              <Button type="submit" disabled={isSubmitting || !isValid}>
+                Submit
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
